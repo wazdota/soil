@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.soil.history.mapper.HistoryMapper">
+
+    <select id="selectBySensorId" parameterType="java.lang.Integer" resultType="com.soil.history.bean.History">
+        select
+              hisId as "id",hisTemp as "temp",hisHum as "hum",hisDate as "date",hisSsId as "sensorId"
+        from
+              tb_history
+              where hisSsId = #{sensorId,jdbcType=INTEGER}
+              order by hisDate asc
+    </select>
+
+    <insert id="insertHistoryNow" parameterType="com.soil.history.bean.History">
+        INSERT INTO tb_history(hisSsId,hisTemp,hisHum,hisDate) VALUES (#{sensorId,jdbcType=INTEGER},#{temp,jdbcType=FLOAT},#{hum,jdbcType=FLOAT},now())
+    </insert>
+</mapper>
