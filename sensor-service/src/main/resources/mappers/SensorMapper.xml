@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.soil.sensor.mapper.SensorMapper">
+
+    <insert id="insert" parameterType="com.soil.sensor.bean.Sensor">
+        INSERT INTO tb_sensor(ssName,ssTemp,ssHum,ssTh,ssTl,ssHh,ssHl,ssUsrId,ssInfoId) VALUES(#{name,jdbcType=VARCHAR},#{temp,jdbcType=FLOAT},#{hum,jdbcType=FLOAT},#{th,jdbcType=FLOAT},#{tl,jdbcType=FLOAT},#{hh,jdbcType=FLOAT},#{hl,jdbcType=FLOAT},#{userId,jdbcType=INTEGER},#{infoId,jdbcType=INTEGER})
+    </insert>
+
+    <update id="update" parameterType="com.soil.sensor.bean.Sensor">
+        UPDATE tb_sensor SET ssName= #{name,jdbcType=VARCHAR},ssTh=#{th,jdbcType=FLOAT},ssTl=#{tl,jdbcType=FLOAT},ssHh=#{hh,jdbcType=FLOAT},ssHl#{hl,jdbcType=FLOAT},ssUsrId=#{userId,jdbcType=INTEGER},ssInfoId=#{infoId,jdbcType=INTEGER} WHERE ssId = #{id,jdbcType=INTEGER}
+    </update>
+
+    <update id="updateTH" parameterType="com.soil.sensor.bean.Sensor">
+        UPDATE tb_sensor SET ssTemp=#{temp,jdbcType=FLOAT},ssHum=#{hum,jdbcType=FLOAT} WHERE ssId = #{id,jdbcType=INTEGER}
+    </update>
+
+    <select id="selectById" parameterType="java.lang.Integer" resultType="com.soil.sensor.bean.Sensor">
+        select
+              ssId as "id",ssName as "name",ssTemp as "temp",ssHum as "hum",ssTh as "th",ssTl as "tl",ssHh as "hh",ssHl as "hl",ssUsrId as "userId",ssInfoId as "infoId"
+        from
+              tb_sensor
+              where ssId = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectByUserId" parameterType="java.lang.Integer" resultType="com.soil.sensor.bean.Sensor">
+        select
+              ssId as "id",ssName as "name",ssTemp as "temp",ssHum as "hum",ssTh as "th",ssTl as "tl",ssHh as "hh",ssHl as "hl",ssUsrId as "userId",ssInfoId as "infoId"
+        from
+              tb_sensor
+              where ssUsrId = #{userId,jdbcType=INTEGER}
+    </select>
+
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        delete from tb_history
+        where hisSsId = #{id,jdbcType=INTEGER};
+        delete from tb_sensor
+        where ssId = #{id,jdbcType=INTEGER}
+    </delete>
+
+</mapper>
