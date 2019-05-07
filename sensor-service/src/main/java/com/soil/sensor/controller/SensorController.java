@@ -83,7 +83,7 @@ public class SensorController {
     }
 
     @CrossOrigin
-    @RequestMapping(value = "/sensprTH", method = RequestMethod.PUT, produces = "application/json; charset=UTF-8")
+    @RequestMapping(value = "/sensor_th", method = RequestMethod.PUT, produces = "application/json; charset=UTF-8")
     public ApiResult updateSensorTH(@RequestBody Sensor sensor){
         Sensor record = sensorService.selectSensor(sensor.getId());
         if(record != null){

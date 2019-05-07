@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.soil.demo2.mapper.SoilInfoMapper">
+
+    <select id="selectAll" resultType="com.soil.info.bean.SoilInfo">
+        select
+              infoId as "id", infoName as "name", infoTh as "th", infoTl as "tl", infoHh as "hh", infoHl as "hl"
+        from
+              tb_soilinfo
+    </select>
+
+    <insert id="insert" parameterType="com.soil.info.bean.SoilInfo">
+        INSERT INTO tb_soilinfo(infoName,infoTh,infoTl,infoHh,infoHl) VALUES(#{name,jdbcType=VARCHAR},#{th,jdbcType=FLOAT},#{tl,jdbcType=FLOAT},#{hh,jdbcType=FLOAT},#{hl,jdbcType=FLOAT})
+    </insert>
+
+    <update id="update" parameterType="com.soil.info.bean.SoilInfo">
+        UPDATE tb_soilinfo SET infoName=#{name,jdbcType=VARCHAR},infoTh=#{th,jdbcType=FLOAT},infoTl=#{tl,jdbcType=FLOAT},infoHh=#{hh,jdbcType=FLOAT},infoHl=#{hl,jdbcType=FLOAT} WHERE infoId = #{id,jdbcType=INTEGER}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Integer">
+        DELETE from tb_soilinfo
+        WHERE infoId=#{id,jdbcType=INTEGER}
+    </delete>
+</mapper>
