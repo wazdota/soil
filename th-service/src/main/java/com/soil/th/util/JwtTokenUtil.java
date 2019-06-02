@@ -63,8 +63,8 @@ public class JwtTokenUtil implements Serializable{
     public int getUserIdFromToken(String token){
         try {
             Claims claims = getClaimsFromToken(token);
-            String id = claims.getId();
-            return Integer.parseInt(id);
+            int id = claims.get("id",Integer.class);
+            return id;
         } catch (Exception e) {
             return 0;
         }

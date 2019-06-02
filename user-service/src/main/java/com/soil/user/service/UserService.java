@@ -1,5 +1,7 @@
 package com.soil.user.service;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -8,6 +10,9 @@ import com.soil.user.bean.User;
 import com.soil.user.response.ApiResult;
 import com.soil.user.mapper.UserMapper;
 import com.soil.user.enums.ErrorCode;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -29,24 +34,31 @@ public class UserService {
         return new ApiResult(ErrorCode.CREATED);
     }
 
-    public int updatePwd(User user){
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        user.setPassword(encoder.encode(user.getPassword()));
-        try {
-            userMapper.updatePassword(user);
-            return 201;
-        } catch (DataAccessException e) {
-            return 400;
+    public ApiResult updateUser(User user){
+        if(user.getPassword() != null) {
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            user.setPassword(encoder.encode(user.getPassword()));
+            try {
+                userMapper.updatePassword(user);
+            } catch (DataAccessException e) {
+                return new ApiResult(ErrorCode.INVALID_REQUEST);
+            }
         }
-    }
-
-    public int updateName(User user) {
-        try {
-            userMapper.updateName(user);
-            return 201;
-        } catch (DataAccessException e) {
-            return 400;
+        if(user.getName() != null) {
+            try {
+                userMapper.updateName(user);
+            } catch (DataAccessException e) {
+                return new ApiResult(ErrorCode.INVALID_REQUEST);
+            }
         }
+        if(user.getMax() != 0) {
+            try{
+                userMapper.updateMax(user);
+            } catch (DataAccessException e) {
+                return new ApiResult(ErrorCode.INVALID_REQUEST);
+            }
+        }
+        return new ApiResult(ErrorCode.CREATED);
     }
 
     public ApiResult updateCount(User user) {
@@ -54,6 +66,46 @@ public class UserService {
             userMapper.updateCount(user);
             return new ApiResult(ErrorCode.CREATED);
         } catch (DataAccessException e) {
+            return new ApiResult(ErrorCode.INVALID_REQUEST);
+        }
+    }
+
+    public User findById(int id) {
+        try {
+            return userMapper.findById(id);
+        } catch (DataAccessException e) {
+            return null;
+        }
+    }
+
+    public ApiResult selectAllUsers(int pageNo, int pageSize, Integer id, String account, String name){
+        if(id != null){
+            try{
+                PageHelper.startPage(pageNo, pageSize);
+                List<User> list = userMapper.selectById(id);
+                PageInfo<User> page = new PageInfo<>(list);
+                return new ApiResult<>(ErrorCode.OK,page);
+            }catch (DataAccessException e) {
+                return new ApiResult(ErrorCode.INVALID_REQUEST);
+            }
+        }
+        else {
+            try{
+                PageHelper.startPage(pageNo,pageSize);
+                List<User> list = userMapper.selectUsers(account,name);
+                PageInfo<User> page = new PageInfo<>(list);
+                return new ApiResult<>(ErrorCode.OK,page);
+            }catch (DataAccessException e) {
+                return new ApiResult(ErrorCode.INVALID_REQUEST);
+            }
+        }
+    }
+
+    public ApiResult deleteUser(int id){
+        try {
+            userMapper.deleteById(id);
+            return new ApiResult(ErrorCode.NO_CONTENT);
+        }catch (DataAccessException e) {
             return new ApiResult(ErrorCode.INVALID_REQUEST);
         }
     }

@@ -16,52 +16,51 @@ import java.util.Map;
 import javax.websocket.server.PathParam;
 
 @Component
-@ServerEndpoint("/websocket/{token}")
+@ServerEndpoint("/websocket/{id}")
 public class WebSocket {
 
     @Value("${jwt.tokenHead}")
     private String tokenHead;
 
-    private JwtTokenUtil jwtTokenUtil;
-    private int userId;
+    private int userId = 0;
     private Session session;
 
     private static CopyOnWriteArraySet<WebSocket> webSockets =new CopyOnWriteArraySet<>();
     private static Map<Integer,Session> sessionPool = new HashMap<Integer,Session>();
-
-    @Autowired
-    public WebSocket(JwtTokenUtil jwtTokenUtil){
-        this.jwtTokenUtil = jwtTokenUtil;
-    }
+    private static Map<Integer,Integer> sessionCount = new HashMap<>();
 
     @OnOpen
-    public void onOpen(Session session, @PathParam(value="token")String authHeader) {
+    public void onOpen(Session session, @PathParam(value="id")int id) {
         this.session = session;
         webSockets.add(this);
-        if (authHeader != null && authHeader.startsWith(tokenHead)){
-            String authToken = authHeader.substring(tokenHead.length());
-            String role = jwtTokenUtil.getAuthorityFromToken(authToken);
-            int userId = jwtTokenUtil.getUserIdFromToken(authToken);
-            if(userId != 0 && role.equals("ROLE_USER")) {
-                if (jwtTokenUtil.validateToken(authToken)){
-                    this.userId = userId;
-                }
-            }
+        this.userId = id;
+        Session session1 = sessionPool.get(this.userId);
+        Integer count = sessionCount.get(this.userId);
+        if(count == null || count==0){
+            sessionCount.put(this.userId,1);
+        }else{
+            sessionCount.put(this.userId,count+1);
         }
-        sessionPool.put(userId, session);
-        System.out.println("【websocket消息】有新的连接，总数为:"+webSockets.size());
-        if(this.userId == 0){
+        if(session1 != null){
             try{
-                session.close();
+                session1.close();
             }catch (Exception e) {
                 e.printStackTrace();
             }
         }
+        System.out.println("【websocket消息】有新的连接，总数为:"+webSockets.size());
+        sessionPool.put(this.userId, session);
     }
 
     @OnClose
     public void onClose() {
-        sessionPool.remove(this.userId);
+        Integer count = sessionCount.get(this.userId);
+        if(count >= 2){
+            sessionCount.put(this.userId,count-1);
+        }else {
+            sessionCount.remove(this.userId);
+            sessionPool.remove(this.userId);
+        }
         webSockets.remove(this);
         System.out.println("【websocket消息】连接断开，总数为:"+webSockets.size());
     }

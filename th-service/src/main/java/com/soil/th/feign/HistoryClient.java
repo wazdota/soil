@@ -9,6 +9,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @FeignClient(value="history-service",fallbackFactory = HistoryClientFallbackFactory.class)
 public interface HistoryClient {
-    @RequestMapping(value = "/v1/history",method = RequestMethod.DELETE)
+    @RequestMapping(value = "/v1/history",method = RequestMethod.POST)
     ApiResult addHistory(@RequestBody TempAndHum tempAndHum);
 }

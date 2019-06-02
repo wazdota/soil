@@ -9,6 +9,8 @@ public class ApiResult<T> {
 
     private T value;
 
+    public ApiResult(){}
+
     public ApiResult(int code,String message, T value){
         super();
         this.code = code;
@@ -49,7 +51,7 @@ public class ApiResult<T> {
         this.message = message;
     }
 
-    public Object getValue() {
+    public T getValue() {
         return value;
     }
 

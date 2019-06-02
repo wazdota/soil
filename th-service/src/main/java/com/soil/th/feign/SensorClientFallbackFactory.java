@@ -14,14 +14,10 @@ public class SensorClientFallbackFactory implements FallbackFactory<SensorClient
     public SensorClient create(Throwable cause) {
         return new SensorClient() {
             @Override
-            public ApiResult updateTH(int id, TempAndHum tempAndHum) {
-                return new ApiResult(ErrorCode.INTERNAL_SERVER_ERROR);
-            }
-
-            @Override
-            public ApiResult<Sensor> getSensor(int id) {
+            public ApiResult<Sensor> updateTH(int id, TempAndHum tempAndHum) {
                 return new ApiResult<>(ErrorCode.INTERNAL_SERVER_ERROR);
             }
+
         };
     }
 }

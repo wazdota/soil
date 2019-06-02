@@ -7,6 +7,7 @@ public class User {
         private String password;
         private String name;
         private int count;
+        private int max;
 
         public int getId() {
             return id;
@@ -20,7 +21,7 @@ public class User {
             return account;
         }
 
-        public void setaAccount(String account) {
+        public void setAccount(String account) {
             this.account = account;
         }
 
@@ -46,5 +47,13 @@ public class User {
 
         public void setCount(int count) {
             this.count = count;
+        }
+
+        public int getMax() {
+            return max;
+        }
+
+        public void setMax(int max) {
+            this.max = max;
         }
 }

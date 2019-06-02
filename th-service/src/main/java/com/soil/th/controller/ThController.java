@@ -26,17 +26,12 @@ public class ThController {
         this.sensorClient = sensorClient;
     }
 
-    @CrossOrigin
     @RequestMapping(value = "/submit_th", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
     public ApiResult updateSensorTH(@RequestBody TempAndHum tempAndHum){
-        ApiResult<Sensor> response1 = sensorClient.getSensor(tempAndHum.getSensorId());
-        Sensor sensor = (Sensor)response1.getValue();
+        ApiResult<Sensor> response1 = sensorClient.updateTH(tempAndHum.getSensorId(),tempAndHum);
+        Sensor sensor = response1.getValue();
         if(response1.getValue() == null){
             return new ApiResult(ErrorCode.NOT_FOUND);
-        }
-        ApiResult response2 = sensorClient.updateTH(tempAndHum.getSensorId(),tempAndHum);
-        if(response2.getCode() != 201){
-            return response2;
         }
         webSocket.sendOneMessage(sensor.getUserId(), JSON.toJSONString(tempAndHum));
         return historyClient.addHistory(tempAndHum);

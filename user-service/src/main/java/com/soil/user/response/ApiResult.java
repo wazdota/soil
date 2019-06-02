@@ -16,6 +16,8 @@ public class ApiResult<T> {
         this.value = value;
     }
 
+    public ApiResult(){}
+
     public ApiResult(int code,String message){
         this.code = code;
         this.message = message;
@@ -49,7 +51,7 @@ public class ApiResult<T> {
         this.message = message;
     }
 
-    public Object getValue() {
+    public T getValue() {
         return value;
     }
 

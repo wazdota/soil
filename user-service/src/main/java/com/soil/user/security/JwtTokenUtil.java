@@ -9,10 +9,7 @@ import org.springframework.stereotype.Component;
 import com.soil.user.bean.User;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -69,9 +66,14 @@ public class JwtTokenUtil implements Serializable {
     public List<SimpleGrantedAuthority> getAuthorityFromToken(String token){
         try {
             Claims claims = getClaimsFromToken(token);
-            @SuppressWarnings("unchecked")
-            List<String> authorities = claims.get("authorities",List.class);
-            return authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+            String authority = claims.get("authorities",String.class);
+            List<SimpleGrantedAuthority> list = new ArrayList<>();
+            list.add(new SimpleGrantedAuthority(authority));
+            return list;
+           // @SuppressWarnings("unchecked")
+           // List<String> authorities = claims.get("authorities",List.class);
+            //log.info(String.join(String.join("",authorities)));
+           // return authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
         } catch (Exception e) {
             return null;
         }

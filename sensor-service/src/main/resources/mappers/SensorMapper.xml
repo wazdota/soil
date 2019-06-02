@@ -8,7 +8,7 @@
     </insert>
 
     <update id="update" parameterType="com.soil.sensor.bean.Sensor">
-        UPDATE tb_sensor SET ssName= #{name,jdbcType=VARCHAR},ssTh=#{th,jdbcType=FLOAT},ssTl=#{tl,jdbcType=FLOAT},ssHh=#{hh,jdbcType=FLOAT},ssHl#{hl,jdbcType=FLOAT},ssUsrId=#{userId,jdbcType=INTEGER},ssInfoId=#{infoId,jdbcType=INTEGER} WHERE ssId = #{id,jdbcType=INTEGER}
+        UPDATE tb_sensor SET ssName= #{name,jdbcType=VARCHAR},ssTh=#{th,jdbcType=FLOAT},ssTl=#{tl,jdbcType=FLOAT},ssHh=#{hh,jdbcType=FLOAT},ssHl=#{hl,jdbcType=FLOAT},ssInfoId=#{infoId,jdbcType=INTEGER} WHERE ssId = #{id,jdbcType=INTEGER}
     </update>
 
     <update id="updateTH" parameterType="com.soil.sensor.bean.Sensor">
@@ -37,5 +37,27 @@
         delete from tb_sensor
         where ssId = #{id,jdbcType=INTEGER}
     </delete>
+
+    <select id="findById" resultType="com.soil.sensor.bean.Sensor">
+        select
+              ssId as "id",ssName as "name",ssTemp as "temp",ssHum as "hum",ssTh as "th",ssTl as "tl",ssHh as "hh",ssHl as "hl",ssUsrId as "userId",ssInfoId as "infoId"
+        from
+              tb_sensor
+        where
+        ssUsrId = #{userId}
+        and
+        ssId = #{id}
+    </select>
+
+    <select id="selectSensors" resultType="com.soil.sensor.bean.Sensor">
+        select
+              ssId as "id",ssName as "name",ssTemp as "temp",ssHum as "hum",ssTh as "th",ssTl as "tl",ssHh as "hh",ssHl as "hl",ssUsrId as "userId",ssInfoId as "infoId"
+        from
+              tb_sensor
+        where
+        ssUsrId = #{userId}
+        and
+        ssName like concat('%',#{name},'%')
+    </select>
 
 </mapper>

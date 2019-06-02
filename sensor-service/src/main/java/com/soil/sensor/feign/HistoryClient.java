@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @FeignClient(value="history-service",fallbackFactory = HistoryClientFallbackFactory.class)
 public interface HistoryClient {
-    @RequestMapping(value = "/v1/histories/{sensorId}",method = RequestMethod.DELETE)
+    @RequestMapping(value = "/v1/history/{sensorId}",method = RequestMethod.DELETE)
     ApiResult deleteHistories(@PathVariable int sensorId);
 }

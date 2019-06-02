@@ -9,8 +9,5 @@ import org.springframework.web.bind.annotation.*;
 @FeignClient(value="sensor-service",fallbackFactory = SensorClientFallbackFactory.class)
 public interface SensorClient {
     @RequestMapping(value = "/v1/sensor_th/{id}",method = RequestMethod.PUT)
-    ApiResult updateTH(@PathVariable int id, @RequestBody TempAndHum tempAndHum);
-
-    @RequestMapping(value = "/v1/sensor", method = RequestMethod.GET)
-    ApiResult<Sensor> getSensor(@RequestParam("id") int id);
+    ApiResult<Sensor> updateTH(@PathVariable int id, @RequestBody TempAndHum tempAndHum);
 }

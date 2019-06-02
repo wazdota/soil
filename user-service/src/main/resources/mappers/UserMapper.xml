@@ -1,30 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.soil.demo2.mapper.UserMapper">
+<mapper namespace="com.soil.user.mapper.UserMapper">
 
     <!-- insert user -->
-    <insert id = "insert" parameterType="com.soil.demo2.bean.User">
+    <insert id = "insert" parameterType="com.soil.user.bean.User">
         INSERT INTO tb_usr(usrAccount,usrPassword,usrName,usrCount) VALUES(#{account,jdbcType=VARCHAR},#{password,jdbcType=VARCHAR},#{name,jdbcType=VARCHAR},0)
     </insert>
 
     <!-- update user -->
-    <update id="updateName" parameterType="com.soil.demo2.bean.User">
+    <update id="updateName" parameterType="com.soil.user.bean.User">
         UPDATE tb_usr SET usrName=#{name,jdbcType=VARCHAR}  WHERE usrId=#{id,jdbcType=INTEGER}
     </update>
 
-    <update id="updatePassword" parameterType="com.soil.demo2.bean.User">
+    <update id="updatePassword" parameterType="com.soil.user.bean.User">
         UPDATE tb_usr SET usrPassword=#{password,jdbcType=VARCHAR}  WHERE usrId=#{id,jdbcType=INTEGER}
     </update>
 
-    <update id="updateCount" parameterType="com.soil.demo2.bean.User">
+    <update id="updateCount" parameterType="com.soil.user.bean.User">
         UPDATE tb_usr SET usrCount=usrCount + #{count,jdbcType=INTEGER}  WHERE usrId=#{id,jdbcType=INTEGER}
     </update>
 
+    <update id="updateMax" parameterType="com.soil.user.bean.User">
+        UPDATE tb_usr SET usrMax=#{max,jdbcType=INTEGER} WHERE usrId=#{id,jdbcType=INTEGER}
+    </update>
+
     <!-- find user -->
-    <select id="findByAc" parameterType="java.lang.String" resultType="com.soil.demo2.bean.User">
+    <select id="findByAc" parameterType="java.lang.String" resultType="com.soil.user.bean.User">
         select
-        usrId as id,usrAccount as account,usrPassword as password,usrName as name,usrCount as count
+        usrId as id,usrAccount as account,usrPassword as password,usrName as name,usrCount as count,usrMax as max
         from
         tb_usr
         where usrAccount = #{account,jdbcType=VARCHAR}
@@ -35,4 +39,31 @@
         delete from tb_usr
         where usrId = #{id,jdbcType=INTEGER}
     </delete>
+
+    <select id="findById" parameterType="java.lang.Integer" resultType="com.soil.user.bean.User">
+        select
+        usrId as id,usrAccount as account,usrName as name,usrCount as count,usrMax as max
+        from
+        tb_usr
+        where usrId = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectById" parameterType="java.lang.Integer" resultType="com.soil.user.bean.User">
+        select
+        usrId as id,usrAccount as account,usrName as name,usrCount as count,usrMax as max
+        from
+        tb_usr
+        where usrId = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectUsers" resultType="com.soil.user.bean.User">
+        select
+        usrId as id,usrAccount as account,usrName as name,usrCount as count,usrMax as max
+        from
+        tb_usr
+        where
+        usrName like concat('%',#{name},'%')
+        and
+        usrAccount like concat('%',#{account},'%')
+    </select>
 </mapper>

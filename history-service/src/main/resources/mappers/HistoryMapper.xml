@@ -15,4 +15,17 @@
     <insert id="insertHistoryNow" parameterType="com.soil.history.bean.History">
         INSERT INTO tb_history(hisSsId,hisTemp,hisHum,hisDate) VALUES (#{sensorId,jdbcType=INTEGER},#{temp,jdbcType=FLOAT},#{hum,jdbcType=FLOAT},now())
     </insert>
+
+    <delete id="deleteBySensorId" parameterType="java.lang.Integer">
+        delete from tb_history
+        where hisSsId = #{sensorId,jdbcType=INTEGER}
+    </delete>
+
+    <select id="selectTempAvg" parameterType="java.lang.Integer" resultType="com.soil.history.bean.TempAvg">
+        select ROUND(AVG(hisTemp),1) as "temp" ,DATE_FORMAT(date_sub(hisDate,interval 6 HOUR),'%Y-%m-%d') as "date",(HOUR(date_sub(hisDate,interval 6 HOUR)) DIV 12) as "day" from tb_history where hisSsId = #{sensorId} group by DATE_FORMAT(date_sub(hisDate,interval 6 HOUR),'%Y-%m-%d'),HOUR(date_sub(hisDate,interval 6 HOUR)) DIV 12 order by DATE_FORMAT(date_sub(hisDate,interval 6 HOUR),'%Y-%m-%d') asc
+    </select>
+
+    <select id="selectHumAvg" parameterType="java.lang.Integer" resultType="com.soil.history.bean.HumAvg">
+        select ROUND(AVG(hisHum),1) as "hum",DATE_FORMAT(hisDate,'%Y-%m-%d') as "date" from tb_history where hisSsId = #{sensorId} group by DATE_FORMAT(hisDate,'%Y-%m-%d') order by DATE_FORMAT(hisDate,'%Y-%m-%d') asc
+    </select>
 </mapper>

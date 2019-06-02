@@ -1,0 +1,221 @@
+server:
+  port: 9003
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:9001/eureka/
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: websocket_router
+          uri: lb:ws://th-service
+          predicates:
+            - Path=/websocket/**
+        - id: th_router
+          uri: lb://th-service
+          predicates:
+            - Path=/v1/submit_th
+          filters:
+            - name: Hystrix
+              args:
+                name: fallbackth
+                fallbackUri: forward:/fallback
+        - id: info_router
+          uri: lb://info-service
+          predicates:
+             - Path=/v1/info/**
+          filters:
+            - name: Hystrix
+              args:
+                name: fallbackInfo
+                fallbackUri: forward:/fallback
+        - id: infos_router
+          uri: lb://info-service
+          predicates:
+            - Path=/v1/infos
+          filters:
+            - name: Hystrix
+              args:
+                name: fallbackInfos
+                fallbackUri: forward:/fallback
+        - id: history_router
+          uri: lb://history-service
+          predicates:
+            - Path=/v1/histories/**
+          filters:
+            - name: Hystrix
+              args:
+                name: fallbackHistory
+                fallbackUri: forward:/fallback
+        - id: sensor_router
+          uri: lb://sensor-service
+          predicates:
+            - Path=/v1/sensor/**
+          filters:
+            - name: Hystrix
+              args:
+                name: fallbackSensor
+                fallbackUri: forward:/fallback
+        - id: sensors_router
+          uri: lb://sensor-service
+          predicates:
+            - Path=/v1/sensors
+          filters:
+            - name: Hystrix
+              args:
+                name: fallbackSensors
+                fallbackUri: forward:/fallback
+        - id: user_login
+          uri: lb://user-service
+          predicates:
+            - Path=/user/login
+          filters:
+            - StripPrefix= 1
+            - name: Hystrix
+              args:
+                name: fallbackuserlogin
+                fallbackUri: forward:/fallback
+        - id: super_login
+          uri: lb://supervisor-service
+          predicates:
+            - Path=/super/login
+          filters:
+            - StripPrefix= 1
+            - name: Hystrix
+              args:
+                name: fallbacksuperlogin
+                fallbackUri: forward:/fallback
+        - id: user_route
+          uri: lb://user-service
+          predicates:
+            - Path=/v1/user/**
+          filters:
+            - name: Hystrix
+              args:
+                name: fallbackcmd
+                fallbackUri: forward:/fallback
+        - id: users_route
+          uri: lb://user-service
+          predicates:
+            - Path=/v1/users/**
+          filters:
+            - name: Hystrix
+              args:
+                name: fallbackusers
+                fallbackUri: forward:/fallback
+        - id: admin_login
+          uri: lb://admin-service
+          predicates:
+            - Path=/admin/login
+          filters:
+            - StripPrefix= 1
+            - name: Hystrix
+              args:
+                name: fallbackadminlogin
+                fallbackUri: forward:/fallback
+        - id: admin_router
+          uri: lb://admin-service
+          predicates:
+            - Path=/v1/admin/**
+          filters:
+            - name: Hystrix
+              args:
+                name: fallbackadmin
+                fallbackUri: forward:/fallback
+        - id: admins_router
+          uri: lb://admin-service
+          predicates:
+            - Path=/v1/admins
+          filters:
+            - name: Hystrix
+              args:
+                name: fallbackadmins
+                fallbackUri: forward:/fallback
+        - id: at_router
+          uri: lb://history-service
+          predicates:
+            - Path=/v1/avg_temp
+          filters:
+            - name: Hystrix
+              args:
+                name: fallbackta
+                fallbackUri: forward:/fallback
+        - id: ah_router
+          uri: lb://history-service
+          predicates:
+            - Path=/v1/avg_hum
+          filters:
+            - name: Hystrix
+              args:
+                name: fallbackha
+                fallbackUri: forward:/fallback
+        - id: as_router
+          uri: lb://sensor-service
+          predicates:
+            - Path=/v1/all_sensors
+          filters:
+            - name: Hystrix
+              args:
+                name: fallbackas
+                fallbackUri: forward:/fallback
+        - id: file_router
+          uri: lb://dl-service
+          predicates:
+            - Path=/v1/file
+          filters:
+            - name: Hystrix
+              args:
+                name: fallbackfile
+                fallbackUri: forward:/fallback
+        - id: dl_router
+          uri: lb://dl-service
+          predicates:
+            - Path=/v1/download
+          filters:
+            - name: Hystrix
+              args:
+                name: fallbackdl
+                fallbackUri: forward:/fallback
+        - id: db_router
+          uri: lb://dl-service
+          predicates:
+            - Path=/v1/db
+          filters:
+            - name: Hystrix
+              args:
+                name: fallbackdb
+                fallbackUri: forward:/fallback
+        - id: admin_s_router
+          uri: lb://admin-service
+          predicates:
+            - Path=/v1/admin_s/**
+          filters:
+            - name: Hystrix
+              args:
+                name: fallbackadminss
+                fallbackUri: forward:/fallback
+        - id: usera_router
+          uri: lb://user-service
+          predicates:
+            - Path=/v1/user_a/**
+          filters:
+            - name: Hystrix
+              args:
+                name: fallbackusera
+                fallbackUri: forward:/fallback
+hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds: 5000
+
+logging:
+  level:
+    org.springframework.cloud.gateway: TRACE
+    org.springframework.http.server.reactive: DEBUG
+    org.springframework.web.reactive: DEBUG
+    reactor.ipc.netty: DEBUG
+
+
+jwt.header: Authorization
+jwt.tokenHead: Bearer
+jwt.secret: zjuWAZ

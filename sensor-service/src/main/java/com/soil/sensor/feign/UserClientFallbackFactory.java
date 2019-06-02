@@ -16,6 +16,11 @@ public class UserClientFallbackFactory implements FallbackFactory<UserClient> {
             public ApiResult updateCount(int id,User user) {
                 return new ApiResult(ErrorCode.INTERNAL_SERVER_ERROR);
             }
+
+            @Override
+            public ApiResult<User> getUser(int id) {
+                return new ApiResult<>(ErrorCode.INTERNAL_SERVER_ERROR);
+            }
         };
     }
 }

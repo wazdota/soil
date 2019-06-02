@@ -17,15 +17,28 @@ public class HistoryController {
         this.historyService = historyService;
     }
 
-    @CrossOrigin
     @RequestMapping(value = "/histories", method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
     public ApiResult getSensorHistoryBySensorId(@RequestParam("sensorId") int sensorId){
         return historyService.getSensorHistoryBySensorId(sensorId);
     }
 
-    @CrossOrigin
     @RequestMapping(value = "/history", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
     public ApiResult addHistoryNow(@RequestBody History history){
         return historyService.insertHistoryNow(history);
+    }
+
+    @RequestMapping(value = "/history/{sensorId}", method = RequestMethod.DELETE, produces = "application/json; charset=UTF-8")
+    public ApiResult deleteHistory(@PathVariable int sensorId){
+        return historyService.deleteBySensorId(sensorId);
+    }
+
+    @RequestMapping(value = "/avg_temp", method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
+    public ApiResult getAvgTemp(@RequestParam("sensorId") int sensorId){
+        return historyService.getTempAvg(sensorId);
+    }
+
+    @RequestMapping(value = "/avg_hum", method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
+    public ApiResult getAvgHum(@RequestParam("sensorId") int sensorId){
+        return historyService.getHumAvg(sensorId);
     }
 }

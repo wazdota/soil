@@ -1,5 +1,7 @@
 package com.soil.sensor.service;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.soil.sensor.bean.Sensor;
 import com.soil.sensor.enums.ErrorCode;
 import com.soil.sensor.mapper.SensorMapper;
@@ -62,9 +64,33 @@ public class SensorService {
     public ApiResult updateSensorTH(Sensor sensor) {
         try{
             sensorMapper.updateTH(sensor);
-            return new ApiResult(ErrorCode.CREATED);
+            Sensor result = sensorMapper.selectById(sensor.getId());
+            return new ApiResult<>(ErrorCode.CREATED,result);
         }catch (DataAccessException e){
             return new ApiResult(ErrorCode.INVALID_REQUEST);
+        }
+    }
+
+    public ApiResult selectAllSensors(int pageNo, int pageSize, Integer id, String name, int userId){
+        if(id != null){
+            try{
+                PageHelper.startPage(pageNo, pageSize);
+                List<Sensor> list = sensorMapper.findById(id,userId);
+                PageInfo<Sensor> page = new PageInfo<>(list);
+                return new ApiResult<>(ErrorCode.OK,page);
+            }catch (DataAccessException e) {
+                return new ApiResult(ErrorCode.INVALID_REQUEST);
+            }
+        }
+        else {
+            try{
+                PageHelper.startPage(pageNo,pageSize);
+                List<Sensor> list = sensorMapper.selectSensors(userId,name);
+                PageInfo<Sensor> page = new PageInfo<>(list);
+                return new ApiResult<>(ErrorCode.OK,page);
+            }catch (DataAccessException e) {
+                return new ApiResult(ErrorCode.INVALID_REQUEST);
+            }
         }
     }
 }

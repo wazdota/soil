@@ -18,26 +18,22 @@ public class SoilInfoController {
         this.soilInfoService = soilInfoService;
     }
 
-    @CrossOrigin
     @RequestMapping(value = "/infos", method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
     public ApiResult getAllInfos(){
         return soilInfoService.getAllInfos();
     }
 
-    @CrossOrigin
     @RequestMapping(value = "/info", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
     public ApiResult insertInfo(@RequestBody SoilInfo soilInfo){
         return soilInfoService.insertInfo(soilInfo);
     }
 
-    @CrossOrigin
     @RequestMapping(value = "/info/{id}", method = RequestMethod.PUT, produces = "application/json; charset=UTF-8")
     public ApiResult insertInfo(@PathVariable int id, @RequestBody SoilInfo soilInfo){
         soilInfo.setId(id);
         return soilInfoService.updateInfo(soilInfo);
     }
 
-    @CrossOrigin
     @RequestMapping(value = "/info/{id}", method = RequestMethod.DELETE, produces = "application/json; charset=UTF-8")
     public ApiResult deleteInfo(@PathVariable int id){
         return soilInfoService.deleteInfo(id);

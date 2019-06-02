@@ -1,6 +1,8 @@
 package com.soil.history.service;
 
 import com.soil.history.bean.History;
+import com.soil.history.bean.HumAvg;
+import com.soil.history.bean.TempAvg;
 import com.soil.history.enums.ErrorCode;
 import com.soil.history.mapper.HistoryMapper;
 import com.soil.history.response.ApiResult;
@@ -33,6 +35,33 @@ public class HistoryService {
         try {
             historyMapper.insertHistoryNow(history);
             return new ApiResult(ErrorCode.CREATED);
+        }catch(DataAccessException e){
+            return new ApiResult(ErrorCode.INVALID_REQUEST);
+        }
+    }
+
+    public ApiResult deleteBySensorId(int sensorId){
+        try {
+            historyMapper.deleteBySensorId(sensorId);
+            return new ApiResult(ErrorCode.NO_CONTENT);
+        }catch(DataAccessException e){
+            return new ApiResult(ErrorCode.INVALID_REQUEST);
+        }
+    }
+
+    public ApiResult getTempAvg(int sensorId){
+        try{
+            List<TempAvg> list = historyMapper.selectTempAvg(sensorId);
+            return new ApiResult<>(ErrorCode.OK,list);
+        }catch(DataAccessException e){
+            return new ApiResult(ErrorCode.INVALID_REQUEST);
+        }
+    }
+
+    public ApiResult getHumAvg(int sensorId){
+        try{
+            List<HumAvg> list = historyMapper.selectHumAvg(sensorId);
+            return new ApiResult<>(ErrorCode.OK,list);
         }catch(DataAccessException e){
             return new ApiResult(ErrorCode.INVALID_REQUEST);
         }

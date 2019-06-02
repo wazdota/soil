@@ -49,7 +49,7 @@ public class ApiResult<T> {
         this.message = message;
     }
 
-    public Object getValue() {
+    public T getValue() {
         return value;
     }
 
